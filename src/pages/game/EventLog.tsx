@@ -1,8 +1,8 @@
 import { Fragment, useRef, useState, type PointerEvent } from 'react';
-import { HdTag, NeedsDetailsBadge } from '../../components/Badges';
+import { NeedsDetailsBadge } from '../../components/Badges';
 import EventSheet from '../../components/EventSheet';
 import { ChevronIcon, CloseIcon, GripIcon, PlusIcon } from '../../components/Icons';
-import { insertEvent, moveEvent, type NewEventFields } from '../../data/events';
+import { insertEvent, moveEvent, updateEvent, type NewEventFields } from '../../data/events';
 import { findDropTarget, type DropTarget } from '../../lib/dragDrop';
 import { periodLabel, periodsFor } from '../../lib/periods';
 import { formatSvPct, needsDetails, periodTotals } from '../../stats/gameStats';
@@ -189,7 +189,7 @@ export default function EventLog() {
       {editable && events.length > 0 && (
         <div className="flex items-center gap-2 px-5 pb-1 text-xs text-muted">
           <GripIcon size={14} />
-          Hold the handle and drag to reorder · tap + to insert
+          Tap HD to toggle · drag the handle to reorder · + to insert
         </div>
       )}
 
@@ -345,16 +345,33 @@ function EventRow({ event, onClick, dragHandlers, offsetY, rowRef }: EventRowPro
       >
         <EventIcon event={event} />
         <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
-          <span className="flex items-center gap-2 text-[15px] font-bold">
-            {isGoal ? 'Goal' : 'Save'}
-            {event.highDanger && <HdTag />}
-          </span>
+          <span className="text-[15px] font-bold">{isGoal ? 'Goal' : 'Save'}</span>
           {detail && <span className="truncate text-[13px] text-muted">{detail}</span>}
           {needsDetails(event) && <NeedsDetailsBadge />}
         </span>
         {event.gameClock && (
           <span className="font-display text-lg font-semibold tracking-wider text-muted">{event.gameClock}</span>
         )}
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          navigator.vibrate?.(15);
+          updateEvent(event.id, { highDanger: !event.highDanger });
+        }}
+        aria-pressed={event.highDanger}
+        aria-label={event.highDanger ? 'High danger: on' : 'High danger: off'}
+        className="flex h-12 w-12 shrink-0 items-center justify-center"
+      >
+        <span
+          className={`rounded-md px-1.5 py-1 text-[11px] font-extrabold tracking-[0.08em] ${
+            event.highDanger
+              ? 'bg-save text-save-ink'
+              : 'border border-dashed border-[#2e3b4c] text-faint'
+          }`}
+        >
+          HD
+        </span>
       </button>
       {dragHandlers && (
         <div
