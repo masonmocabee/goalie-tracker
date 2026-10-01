@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* Fonts are bundled (not loaded from Google) so the app works offline at the rink. */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/barlow-condensed-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-weight: 600;
+  font-display: swap;
+  src: url('./assets/fonts/barlow-condensed-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/barlow-condensed-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('./assets/fonts/manrope-variable.woff2') format('woff2');
+}
+
+/* Dark-only theme. Blue = saves, orange = goals. */
+@theme {
+  --font-sans: Manrope, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', sans-serif;
+
+  --color-ink: #0a0e13; /* page background */
+  --color-panel: #121922; /* cards */
+  --color-well: #0d1218; /* tiles inside cards, nav */
+  --color-line: #1e2834; /* card borders */
+  --color-line-strong: #243041; /* control borders */
+  --color-divider: #1a232e;
+  --color-fg: #eef3f8;
+  --color-fg-2: #c9d3de;
+  --color-muted: #8c9aab;
+  --color-faint: #5f6d7e;
+
+  --color-save: #5cb8ff;
+  --color-save-ink: #04121f; /* text on save blue */
+  --color-save-deep: #10263d;
+  --color-save-soft: #9ccbf2;
+  --color-save-line: #2d5a84;
+
+  --color-goal: #ff8a4c;
+  --color-goal-ink: #1a0c04; /* text on goal orange */
+  --color-goal-soft: #ffb089;
+  --color-goal-deep: #4a2a1a;
+  --color-goal-track: #2a1a12;
+
+  --color-post: #e5ecf3;
+  --color-goal-line: #e5484d;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-ink font-sans text-fg antialiased;
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Small uppercase section label used throughout the design. */
+@utility eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
