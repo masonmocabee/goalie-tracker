@@ -8,9 +8,15 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Goalie Tracker</title>
+    <style>
+      /* Shown until the app starts; React replaces it. If it stays, the app's code didn't load. */
+      body { margin: 0; background: #0a0e13; }
+      .boot { font: 15px system-ui, sans-serif; color: #8c9aab; padding: 48px 24px; text-align: center; }
+      .boot a { color: #5cb8ff; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot">Loading Goalie Tracker…<br /><br />Stuck here? <a href="./">Reload</a></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
