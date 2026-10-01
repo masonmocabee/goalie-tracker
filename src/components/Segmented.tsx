@@ -18,7 +18,7 @@ export default function Segmented<T extends string | number>({ label, options, v
     <div
       role="group"
       aria-label={label}
-      className={`flex gap-1 border border-line p-1 ${large ? 'rounded-2xl bg-panel' : 'rounded-[14px] bg-well'}`}
+      className={`track flex gap-1 border border-line-strong ${large ? 'rounded-[22px] p-1.5' : 'rounded-2xl p-1'}`}
     >
       {options.map((o) => {
         const on = o.value === value;
@@ -29,8 +29,8 @@ export default function Segmented<T extends string | number>({ label, options, v
             onClick={() => onChange(o.value)}
             aria-pressed={on}
             className={`flex-1 font-display font-bold tracking-wider ${
-              large ? 'h-12 rounded-xl text-[22px]' : 'h-11 rounded-[10px] text-xl'
-            } ${on ? 'bg-fg text-ink' : 'text-muted'}`}
+              large ? 'h-12 rounded-2xl text-[22px]' : 'h-11 rounded-xl text-xl'
+            } ${on ? 'bg-fg text-ink shadow-[0_4px_14px_rgba(0,0,0,0.35)]' : 'text-fg-2/75'}`}
           >
             {o.label}
           </button>

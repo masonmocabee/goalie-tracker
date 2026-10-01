@@ -32,7 +32,7 @@ const SPOTS: Record<Exclude<NetZone, 'unknown'>, Spot> = {
 };
 
 const HIT_RADIUS = 30; // bigger than the drawn circle so it's easy to tap
-const ORANGE = '#ff8a4c';
+const ORANGE = '#ff8f63';
 
 export default function NetDiagram({ value, onChange, counts, markers }: Props) {
   const toggle = (zone: NetZone) => onChange?.(value === zone ? undefined : zone);
@@ -44,16 +44,16 @@ export default function NetDiagram({ value, onChange, counts, markers }: Props) 
       <svg viewBox="0 0 320 250" className="w-full select-none" role="group" aria-label="Net zones, shooter's view">
         <defs>
           <pattern id="net-mesh" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <path d="M0 0 V12 M0 0 H12" stroke="rgba(238,243,248,0.07)" strokeWidth="1" />
+            <path d="M0 0 V12 M0 0 H12" stroke="rgba(246,245,252,0.07)" strokeWidth="1" />
           </pattern>
         </defs>
-        <rect x={16} y={14} width={288} height={230} fill="#0d1218" />
+        <rect x={16} y={14} width={288} height={230} fill="#100e22" />
         <rect x={16} y={14} width={288} height={230} fill="url(#net-mesh)" />
 
         <Goalie />
 
         {/* Posts, crossbar and goal line */}
-        <path d="M16 244 V14 H304 V244" fill="none" stroke="#e5ecf3" strokeWidth={6} strokeLinejoin="round" />
+        <path d="M16 244 V14 H304 V244" fill="none" stroke="#e8e6f5" strokeWidth={6} strokeLinejoin="round" />
         <path d="M10 245 H310" stroke="#e5484d" strokeWidth={3} strokeLinecap="round" />
 
         {(Object.entries(SPOTS) as [NetZone, Spot][]).map(([zone, s]) => {
@@ -71,7 +71,7 @@ export default function NetDiagram({ value, onChange, counts, markers }: Props) 
           const textClass = numbers.length
             ? 'text-[15px] font-extrabold'
             : 'text-[9.5px] font-semibold';
-          const textColor = darkText ? '#1a0c04' : heat ? '#ffe2d2' : faint ? '#5f6d7e' : '#c9d3de';
+          const textColor = darkText ? '#1a0c04' : heat ? '#ffe2d2' : faint ? '#66638a' : '#d4d2e8';
 
           return (
             <g
@@ -91,8 +91,8 @@ export default function NetDiagram({ value, onChange, counts, markers }: Props) 
                 cx={s.cx}
                 cy={s.cy}
                 r={s.r}
-                fill={filled ? ORANGE : 'rgba(10,14,19,0.82)'}
-                stroke={filled ? ORANGE : 'rgba(201,211,222,0.35)'}
+                fill={filled ? ORANGE : 'rgba(10,9,24,0.82)'}
+                stroke={filled ? ORANGE : 'rgba(212,210,232,0.35)'}
                 strokeWidth={1.5}
                 strokeDasharray={filled ? undefined : '3 3'}
               />
@@ -112,13 +112,13 @@ export default function NetDiagram({ value, onChange, counts, markers }: Props) 
               ))}
               {counts && count > 0 && (
                 <g className="pointer-events-none">
-                  <circle cx={s.cx + s.r * 0.75} cy={s.cy - s.r * 0.75} r={11} fill="#eef3f8" stroke="#0a0e13" strokeWidth={2} />
+                  <circle cx={s.cx + s.r * 0.75} cy={s.cy - s.r * 0.75} r={11} fill="#f6f5fc" stroke="#0a0918" strokeWidth={2} />
                   <text
                     x={s.cx + s.r * 0.75}
                     y={s.cy - s.r * 0.75}
                     textAnchor="middle"
                     dominantBaseline="central"
-                    fill="#0a0e13"
+                    fill="#0a0918"
                     className="text-[12px] font-extrabold"
                   >
                     {count}
@@ -157,19 +157,19 @@ export default function NetDiagram({ value, onChange, counts, markers }: Props) 
 
 /** Goalie silhouette in a ready stance, drawn behind the zone circles. */
 function Goalie() {
-  const gear = '#243041';
-  const body = '#1c2632';
+  const gear = '#2c2858';
+  const body = '#221e46';
   return (
     <g aria-hidden className="pointer-events-none">
       {/* Stick: shaft from the blocker down to a blade in front of the five hole */}
-      <path d="M96 146 L130 236 H178" fill="none" stroke="#3a4757" strokeWidth={5} strokeLinecap="round" />
+      <path d="M96 146 L130 236 H178" fill="none" stroke="#454077" strokeWidth={5} strokeLinecap="round" />
       {/* Arms */}
       <path d="M134 92 L104 122" stroke={body} strokeWidth={15} strokeLinecap="round" />
       <path d="M186 92 L214 116" stroke={body} strokeWidth={15} strokeLinecap="round" />
       {/* Torso and mask */}
       <rect x={126} y={74} width={68} height={72} rx={16} fill={body} />
       <circle cx={160} cy={58} r={17} fill={gear} />
-      <rect x={152} y={52} width={16} height={12} rx={3} fill="#0d1218" opacity={0.6} />
+      <rect x={152} y={52} width={16} height={12} rx={3} fill="#100e22" opacity={0.6} />
       {/* Pads */}
       <rect x={104} y={138} width={38} height={104} rx={10} fill={gear} />
       <rect x={178} y={138} width={38} height={104} rx={10} fill={gear} />

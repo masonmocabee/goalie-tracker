@@ -69,7 +69,7 @@ export default function NewGameForm({ onCreated }: Props) {
       <button
         type="submit"
         disabled={saving}
-        className="h-[58px] rounded-[18px] bg-save text-[17px] font-extrabold text-save-ink disabled:opacity-60"
+        className="h-[58px] rounded-[22px] fill-save text-[17px] font-extrabold text-save-ink disabled:opacity-60"
       >
         Start game
       </button>

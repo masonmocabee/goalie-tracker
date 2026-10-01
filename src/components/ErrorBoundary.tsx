@@ -41,11 +41,11 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, St
         <button
           type="button"
           onClick={() => location.reload()}
-          className="h-14 rounded-2xl bg-save text-[17px] font-extrabold text-save-ink"
+          className="h-14 rounded-2xl fill-save text-[17px] font-extrabold text-save-ink"
         >
           Reload
         </button>
-        <pre className="overflow-x-auto rounded-2xl border border-line bg-panel p-4 text-xs leading-relaxed whitespace-pre-wrap text-muted">
+        <pre className="overflow-x-auto rounded-2xl surface border border-line p-4 text-xs leading-relaxed whitespace-pre-wrap text-muted">
           {details}
         </pre>
       </div>

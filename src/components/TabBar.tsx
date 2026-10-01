@@ -12,7 +12,7 @@ export default function TabBar({ tabs, label }: { tabs: Tab[]; label: string }) 
   return (
     <nav
       aria-label={label}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-divider bg-well pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-[#0c0a1c]/85 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))]"
     >
       <div className="mx-auto flex max-w-xl px-2 pt-1.5">
         {tabs.map((tab) => (

@@ -56,20 +56,24 @@ interface HeaderProps {
   centered?: boolean;
 }
 
+/** Square, see-through icon button used on both sides of the game header. */
+export const HEADER_BUTTON =
+  'glass flex size-[46px] shrink-0 items-center justify-center rounded-2xl text-fg active:bg-white/10';
+
 /** Back to games, a small status line, and the title. */
 export function GameHeader({ eyebrow, title, right, centered = false }: HeaderProps) {
   return (
     <div className="flex items-center gap-2 px-3 pt-[max(1rem,env(safe-area-inset-top))] pb-1.5">
-      <Link to="/" aria-label="Back to games" className="flex size-11 shrink-0 items-center justify-center rounded-[14px]">
+      <Link to="/" aria-label="Back to games" className={HEADER_BUTTON}>
         <BackIcon size={24} />
       </Link>
-      <div className={`flex min-w-0 flex-1 flex-col gap-0.5 ${centered ? 'items-center text-center' : ''}`}>
-        <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-muted uppercase">
+      <div className={`flex min-w-0 flex-1 flex-col gap-1 ${centered ? 'items-center text-center' : ''}`}>
+        <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">
           {eyebrow}
         </div>
-        <h1 className="truncate font-display text-[28px] leading-none font-bold tracking-wide">{title}</h1>
+        <h1 className="truncate font-display text-[30px] leading-none font-bold tracking-wide">{title}</h1>
       </div>
-      <div className="flex min-w-11 shrink-0 justify-end">{right}</div>
+      <div className="flex min-w-[46px] shrink-0 justify-end">{right}</div>
     </div>
   );
 }
@@ -79,7 +83,7 @@ export function StatusEyebrow({ game, prefix }: { game: Game; prefix?: string })
   const where = game.homeAway === 'home' ? 'Home' : game.homeAway === 'away' ? 'Away' : null;
   return (
     <>
-      {!game.final && <span className="size-[7px] rounded-full bg-goal" />}
+      {!game.final && <span className="size-[7px] rounded-full bg-goal shadow-[0_0_8px_var(--color-goal)]" />}
       {[prefix, game.final ? 'Final' : 'Live', where].filter(Boolean).join(' · ')}
     </>
   );

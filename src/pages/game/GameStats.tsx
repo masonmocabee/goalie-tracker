@@ -166,7 +166,7 @@ function GoalCard({ goal, number, onClick }: { goal: ShotEvent; number: number; 
       type="button"
       onClick={onClick}
       className={`flex items-center gap-3.5 rounded-[18px] px-4 py-3.5 text-left ${
-        missing ? 'border border-dashed border-goal/45 bg-goal/[0.06]' : 'border border-line bg-panel'
+        missing ? 'border border-dashed border-goal/45 bg-goal/[0.06]' : 'surface border border-line'
       }`}
     >
       <span
@@ -188,7 +188,7 @@ function GoalCard({ goal, number, onClick }: { goal: ShotEvent; number: number; 
 
 function Card({ title, children }: { title?: string; children: ReactNode }) {
   return (
-    <section className="mx-4 flex flex-col gap-4 rounded-3xl border border-line bg-panel px-5 py-5">
+    <section className="mx-4 flex flex-col gap-4 rounded-3xl surface border border-line px-5 py-5">
       {title && <h2 className="eyebrow">{title}</h2>}
       {children}
     </section>
@@ -197,7 +197,7 @@ function Card({ title, children }: { title?: string; children: ReactNode }) {
 
 function Tile({ value, label, className = '' }: { value: ReactNode; label: string; className?: string }) {
   return (
-    <div className="flex flex-col gap-0.5 rounded-[14px] bg-well px-3.5 py-3">
+    <div className="flex flex-col gap-0.5 tile rounded-[18px] px-3.5 py-3.5">
       <div className={`font-display text-[30px] leading-none font-bold ${className}`}>{value}</div>
       <div className="text-xs font-semibold text-muted">{label}</div>
     </div>

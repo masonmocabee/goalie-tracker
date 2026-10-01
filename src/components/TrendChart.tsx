@@ -50,17 +50,17 @@ export default function TrendChart({ points }: { points: TrendPoint[] }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label="Save percentage and high-danger save percentage by game">
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={LEFT} x2={RIGHT} y1={y(t)} y2={y(t)} stroke={t === ticks[ticks.length - 1] ? '#243041' : '#1a232e'} />
-            <text x={LEFT - 8} y={y(t) + 4} textAnchor="end" fill="#8c9aab" fontSize={12}>
+            <line x1={LEFT} x2={RIGHT} y1={y(t)} y2={y(t)} stroke={t === ticks[ticks.length - 1] ? '#363062' : '#1e1a3a'} />
+            <text x={LEFT - 8} y={y(t) + 4} textAnchor="end" fill="#a19fc0" fontSize={12}>
               {formatSvPct(t)}
             </text>
           </g>
         ))}
 
-        {activePoint && <line x1={x(active!)} x2={x(active!)} y1={TOP} y2={BOTTOM} stroke="#5f6d7e" strokeDasharray="3 3" />}
+        {activePoint && <line x1={x(active!)} x2={x(active!)} y1={TOP} y2={BOTTOM} stroke="#66638a" strokeDasharray="3 3" />}
 
-        <path d={path((p) => p.hdSvPct)} fill="none" stroke="#eef3f8" strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" />
-        <path d={svPath} fill="none" stroke="#5cb8ff" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
+        <path d={path((p) => p.hdSvPct)} fill="none" stroke="#f6f5fc" strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" />
+        <path d={svPath} fill="none" stroke="#7f9bff" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
         {points.map((p, i) =>
           p.svPct === null ? null : (
             <circle
@@ -68,23 +68,23 @@ export default function TrendChart({ points }: { points: TrendPoint[] }) {
               cx={x(i)}
               cy={y(p.svPct)}
               r={i === active || i === last ? 5 : 3.5}
-              fill="#0a0e13"
-              stroke="#5cb8ff"
+              fill="#0a0918"
+              stroke="#7f9bff"
               strokeWidth={i === active || i === last ? 3 : 2}
             />
           ),
         )}
         {lastSv !== null && lastSv !== undefined && active === null && (
-          <text x={x(last)} y={y(lastSv) - 12} textAnchor="end" fill="#eef3f8" fontSize={13} fontWeight={700}>
+          <text x={x(last)} y={y(lastSv) - 12} textAnchor="end" fill="#f6f5fc" fontSize={13} fontWeight={700}>
             {formatSvPct(lastSv)}
           </text>
         )}
 
-        <text x={x(0)} y={226} fill="#8c9aab" fontSize={12} textAnchor={points.length > 1 ? 'start' : 'middle'}>
+        <text x={x(0)} y={226} fill="#a19fc0" fontSize={12} textAnchor={points.length > 1 ? 'start' : 'middle'}>
           {formatGameDate(points[0].date)}
         </text>
         {points.length > 1 && (
-          <text x={x(last)} y={226} textAnchor="end" fill="#8c9aab" fontSize={12}>
+          <text x={x(last)} y={226} textAnchor="end" fill="#a19fc0" fontSize={12}>
             {formatGameDate(points[last].date)}
           </text>
         )}

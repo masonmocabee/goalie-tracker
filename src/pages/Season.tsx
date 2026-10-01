@@ -178,7 +178,7 @@ export default function Season() {
 
 function ShutoutCallout({ shutouts }: { shutouts: SeasonStats['shutouts'] }) {
   return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-save-line bg-[#0d1724] px-5 py-5 sm:flex-row sm:items-center md:px-6">
+    <section className="flex flex-col gap-4 rounded-3xl border border-save-line bg-save-deep/50 px-5 py-5 sm:flex-row sm:items-center md:px-6">
       <div className="flex items-center gap-4">
         <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-save text-save-ink">
           <ShieldIcon size={30} />
@@ -195,7 +195,7 @@ function ShutoutCallout({ shutouts }: { shutouts: SeasonStats['shutouts'] }) {
           <li key={so.gameId}>
             <Link
               to={`/game/${so.gameId}/stats`}
-              className="flex h-11 items-center gap-2 rounded-full border border-save-line bg-save-deep px-4 text-sm font-bold text-[#d6ecff]"
+              className="flex h-11 items-center gap-2 rounded-full border border-save-line bg-save-deep px-4 text-sm font-bold text-fg"
             >
               {formatShortDate(so.date)} · {so.opponent}
               <span className="font-semibold text-save-soft">{so.saves} saves</span>
@@ -209,7 +209,7 @@ function ShutoutCallout({ shutouts }: { shutouts: SeasonStats['shutouts'] }) {
 
 function Card({ title, className = '', children }: { title: string; className?: string; children: ReactNode }) {
   return (
-    <section className={`flex flex-col gap-4 rounded-3xl border border-line bg-panel px-5 py-5 md:px-6 ${className}`}>
+    <section className={`flex flex-col gap-4 rounded-3xl surface border border-line px-5 py-5 md:px-6 ${className}`}>
       <h2 className="text-base font-extrabold">{title}</h2>
       {children}
     </section>
@@ -218,7 +218,7 @@ function Card({ title, className = '', children }: { title: string; className?: 
 
 function Kpi({ label, value, sub, className = '' }: { label: string; value: string; sub: string; className?: string }) {
   return (
-    <div className="flex flex-col gap-1.5 rounded-[20px] border border-line bg-panel px-5 py-4">
+    <div className="flex flex-col gap-1.5 rounded-[20px] surface border border-line px-5 py-4">
       <div className="text-xs font-bold tracking-[0.1em] text-muted uppercase">{label}</div>
       <div className={`font-display text-[44px] leading-none font-bold ${className}`}>{value}</div>
       <div className="text-xs text-muted">{sub}</div>

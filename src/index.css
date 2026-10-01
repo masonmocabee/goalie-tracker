@@ -26,35 +26,35 @@
   src: url('./assets/fonts/manrope-variable.woff2') format('woff2');
 }
 
-/* Dark-only theme. Blue = saves, orange = goals. */
+/* Dark-only theme on a deep indigo night. Periwinkle = saves, orange = goals. */
 @theme {
   --font-sans: Manrope, system-ui, sans-serif;
   --font-display: 'Barlow Condensed', sans-serif;
 
-  --color-ink: #0a0e13; /* page background */
-  --color-panel: #121922; /* cards */
-  --color-well: #0d1218; /* tiles inside cards, nav */
-  --color-line: #1e2834; /* card borders */
-  --color-line-strong: #243041; /* control borders */
-  --color-divider: #1a232e;
-  --color-fg: #eef3f8;
-  --color-fg-2: #c9d3de;
-  --color-muted: #8c9aab;
-  --color-faint: #5f6d7e;
+  --color-ink: #0a0918; /* page background */
+  --color-panel: #15122b; /* solid cards (sheets, inputs) */
+  --color-well: #100e22; /* tiles inside cards, nav */
+  --color-line: #27234a; /* card borders */
+  --color-line-strong: #363062; /* control borders */
+  --color-divider: #1e1a3a;
+  --color-fg: #f6f5fc;
+  --color-fg-2: #d4d2e8;
+  --color-muted: #a19fc0;
+  --color-faint: #66638a;
 
-  --color-save: #5cb8ff;
-  --color-save-ink: #04121f; /* text on save blue */
-  --color-save-deep: #10263d;
-  --color-save-soft: #9ccbf2;
-  --color-save-line: #2d5a84;
+  --color-save: #7f9bff;
+  --color-save-ink: #0c1340; /* text on save blue */
+  --color-save-deep: #15164a;
+  --color-save-soft: #b3c3ff;
+  --color-save-line: #5568d4;
 
-  --color-goal: #ff8a4c;
-  --color-goal-ink: #1a0c04; /* text on goal orange */
-  --color-goal-soft: #ffb089;
-  --color-goal-deep: #4a2a1a;
-  --color-goal-track: #2a1a12;
+  --color-goal: #ff8f63;
+  --color-goal-ink: #2a0d05; /* text on goal orange */
+  --color-goal-soft: #ffb79a;
+  --color-goal-deep: #4a2218;
+  --color-goal-track: #2a1712;
 
-  --color-post: #e5ecf3;
+  --color-post: #e8e6f5;
   --color-goal-line: #e5484d;
 }
 
@@ -70,6 +70,20 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Soft violet glow behind every screen. A fixed layer rather than
+   background-attachment: fixed, which Android Chrome ignores. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(90% 45% at 50% 0%, rgba(92, 52, 150, 0.32), transparent 70%),
+    radial-gradient(60% 35% at 85% 20%, rgba(150, 40, 110, 0.12), transparent 70%),
+    linear-gradient(180deg, #100c22 0%, #0a0918 55%, #07060f 100%);
+}
+
 button {
   cursor: pointer;
   touch-action: manipulation;
@@ -82,4 +96,39 @@ button {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+/* Glassy card over the page glow. Pair with `border border-line`. */
+@utility surface {
+  background-color: rgba(14, 12, 30, 0.72);
+  background-image: linear-gradient(160deg, rgba(48, 38, 96, 0.35) 0%, rgba(10, 9, 24, 0) 60%);
+}
+
+/* Stat tile inside a card. */
+@utility tile {
+  background-image: linear-gradient(135deg, #1b1838 0%, #1d2149 100%);
+}
+
+/* Bordered, see-through icon button (header back/menu). */
+@utility glass {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Track behind segmented controls. */
+@utility track {
+  background-image: linear-gradient(90deg, #2a1f58 0%, #1c2452 100%);
+}
+
+/* Big action fills. */
+@utility fill-save {
+  background-image: linear-gradient(135deg, #a9cdff 0%, #829dff 55%, #5b67ff 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+@utility fill-hd {
+  background-image: linear-gradient(160deg, #1b1c50 0%, #10103a 100%);
+}
+@utility fill-goal {
+  background-image: linear-gradient(135deg, #ffae90 0%, #dc7d5e 55%, #8e3826 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }

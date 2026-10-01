@@ -24,7 +24,7 @@ interface Props {
 }
 
 const inputClass =
-  'h-12 w-full rounded-[14px] border border-line-strong bg-well px-3.5 text-fg placeholder:text-[#6b7889]';
+  'h-12 w-full rounded-[14px] border border-line-strong bg-well px-3.5 text-fg placeholder:text-[#77749a]';
 
 /**
  * Edit an event. Every change is saved immediately, so closing the sheet at any
@@ -137,7 +137,7 @@ export default function EventSheet({ event, numPeriods, onClose, full = false }:
           </span>
           <span
             className={`flex h-8 w-[52px] shrink-0 rounded-full p-[3px] ${
-              event.highDanger ? 'justify-end bg-save' : 'justify-start bg-[#2e3b4c]'
+              event.highDanger ? 'justify-end bg-save' : 'justify-start bg-[#3a3566]'
             }`}
           >
             <span className={`size-[26px] rounded-full ${event.highDanger ? 'bg-save-ink' : 'bg-fg-2'}`} />

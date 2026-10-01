@@ -27,7 +27,7 @@ export default function GamesList() {
       </div>
 
       {games.length > 0 && (
-        <Link to="/season" className="grid grid-cols-3 gap-2 rounded-[20px] border border-line bg-panel px-[18px] py-4">
+        <Link to="/season" className="grid grid-cols-3 gap-2 rounded-[20px] surface border border-line px-[18px] py-4">
           <StripStat value={formatSvPct(season.overall.svPct)} label="Season SV%" className="text-save" />
           <StripStat value={formatGaa(season.gaa)} label="GAA" />
           <StripStat value={String(season.games)} label="Games" />
@@ -37,7 +37,7 @@ export default function GamesList() {
       <button
         type="button"
         onClick={() => setShowNew(true)}
-        className="flex h-[60px] items-center justify-center gap-2.5 rounded-[18px] bg-save text-[17px] font-extrabold text-save-ink"
+        className="flex h-[60px] items-center justify-center gap-2.5 rounded-[22px] border border-white/30 fill-save text-[17px] font-extrabold text-save-ink"
       >
         <PlusIcon size={22} />
         New game
@@ -60,9 +60,9 @@ export default function GamesList() {
                 <li key={game.id}>
                   <Link
                     to={`/game/${game.id}`}
-                    className="flex items-center gap-3.5 rounded-[18px] border border-line bg-panel py-3 pr-4 pl-3"
+                    className="flex items-center gap-3.5 rounded-[18px] surface border border-line py-3 pr-4 pl-3"
                   >
-                    <div className="flex h-14 w-[52px] shrink-0 flex-col items-center justify-center rounded-xl bg-well">
+                    <div className="flex h-14 w-[52px] shrink-0 flex-col items-center justify-center rounded-xl tile">
                       <div className="text-[11px] font-bold tracking-[0.1em] text-muted">{tile.mon}</div>
                       <div className="font-display text-[26px] leading-none font-bold">{tile.day}</div>
                     </div>

@@ -212,7 +212,7 @@ export default function EventLog() {
                       type="button"
                       aria-label={`Insert in ${periodLabel(period)}`}
                       onClick={() => setGap({ key: `${period}:0`, period })}
-                      className={`ml-auto flex h-9 w-11 items-center justify-center rounded-full border border-dashed border-[#2e3b4c] ${
+                      className={`ml-auto flex h-9 w-11 items-center justify-center rounded-full border border-dashed border-[#3a3566] ${
                         dragView ? 'invisible' : ''
                       }`}
                     >
@@ -233,7 +233,7 @@ export default function EventLog() {
             <section
               key={period}
               ref={isCollapsed ? setSectionEl(period) : undefined}
-              className="overflow-hidden rounded-[22px] border border-line bg-panel"
+              className="overflow-hidden rounded-[22px] surface border border-line"
             >
               <button
                 type="button"
@@ -367,7 +367,7 @@ function EventRow({ event, onClick, dragHandlers, offsetY, rowRef }: EventRowPro
           className={`rounded-md px-1.5 py-1 text-[11px] font-extrabold tracking-[0.08em] ${
             event.highDanger
               ? 'bg-save text-save-ink'
-              : 'border border-dashed border-[#2e3b4c] text-faint'
+              : 'border border-dashed border-[#3a3566] text-faint'
           }`}
         >
           HD
@@ -407,7 +407,7 @@ function InsertButton({ onClick, hidden }: { onClick: () => void; hidden: boolea
         type="button"
         onClick={onClick}
         aria-label="Insert here"
-        className="flex h-7 w-11 items-center justify-center rounded-full border border-dashed border-[#2e3b4c] text-muted"
+        className="flex h-7 w-11 items-center justify-center rounded-full border border-dashed border-[#3a3566] text-muted"
       >
         <PlusIcon size={14} />
       </button>
@@ -427,7 +427,7 @@ function InsertPicker({
 }) {
   const btn = 'h-[52px] rounded-[14px] font-display text-xl font-bold tracking-wider';
   return (
-    <div className="mt-1.5 mb-2.5 flex flex-col gap-2.5 rounded-2xl border border-save-line bg-[#0d1724] p-3">
+    <div className="mt-1.5 mb-2.5 flex flex-col gap-2.5 rounded-2xl border border-save-line bg-save-deep/50 p-3">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold tracking-[0.12em] text-save-soft uppercase">
           Insert here · {periodLabel(period)}
@@ -442,17 +442,17 @@ function InsertPicker({
         </button>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <button type="button" onClick={() => onPick({ type: 'save', highDanger: false })} className={`${btn} bg-save text-save-ink`}>
+        <button type="button" onClick={() => onPick({ type: 'save', highDanger: false })} className={`${btn} fill-save text-save-ink`}>
           SAVE
         </button>
         <button
           type="button"
           onClick={() => onPick({ type: 'save', highDanger: true })}
-          className={`${btn} border-2 border-save bg-save-deep text-[#d6ecff]`}
+          className={`${btn} fill-hd border-2 border-save-line text-fg`}
         >
           HD SAVE
         </button>
-        <button type="button" onClick={() => onPick({ type: 'goal', highDanger: false })} className={`${btn} bg-goal text-goal-ink`}>
+        <button type="button" onClick={() => onPick({ type: 'goal', highDanger: false })} className={`${btn} fill-goal text-goal-ink`}>
           GOAL
         </button>
       </div>

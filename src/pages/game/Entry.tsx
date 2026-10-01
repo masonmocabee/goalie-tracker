@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import BottomSheet from '../../components/BottomSheet';
 import EventSheet from '../../components/EventSheet';
-import { FlagIcon, UndoIcon } from '../../components/Icons';
+import { FlagIcon, ListIcon, UndoIcon } from '../../components/Icons';
 import Segmented from '../../components/Segmented';
 import { appendEvent, undoLast, type NewEventFields } from '../../data/events';
 import { updateGame } from '../../data/games';
 import { periodLabel, periodsFor } from '../../lib/periods';
 import { formatSvPct, lastLogged, periodTotals, totals } from '../../stats/gameStats';
 import type { Period, ShotEvent } from '../../types';
-import { GameHeader, StatusEyebrow, useGameContext } from './GameLayout';
+import { GameHeader, HEADER_BUTTON, StatusEyebrow, useGameContext } from './GameLayout';
 
 function eventLabel(e: ShotEvent): string {
   const kind = e.type === 'goal' ? 'Goal' : e.highDanger ? 'HD save' : 'Save';
@@ -21,6 +22,7 @@ export default function Entry() {
   const navigate = useNavigate();
   const [chosenPeriod, setChosenPeriod] = useState<Period | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
   const [toast, setToast] = useState<{ text: string; key: number } | null>(null);
   const toastTimer = useRef<number>(undefined);
 
@@ -53,6 +55,7 @@ export default function Entry() {
   }
 
   async function toggleFinal() {
+    setShowMenu(false);
     if (game.final) {
       await updateGame(game.id, { final: false });
       return;
@@ -69,19 +72,8 @@ export default function Entry() {
         eyebrow={<StatusEyebrow game={game} />}
         title={`vs ${game.opponent}`}
         right={
-          <button
-            type="button"
-            onClick={toggleFinal}
-            className="flex h-11 items-center gap-1.5 rounded-[14px] border border-line-strong bg-panel px-3 text-[13px] font-bold text-fg-2"
-          >
-            {game.final ? (
-              'Reopen'
-            ) : (
-              <>
-                <FlagIcon size={16} />
-                End
-              </>
-            )}
+          <button type="button" onClick={() => setShowMenu(true)} aria-label="Game menu" className={HEADER_BUTTON}>
+            <ListIcon size={24} />
           </button>
         }
       />
@@ -96,16 +88,16 @@ export default function Entry() {
         />
       </div>
 
-      <div className="mx-4 mt-3 flex flex-col gap-[18px] rounded-3xl border border-line bg-panel p-5">
+      <div className="surface mx-4 mt-3 flex flex-col gap-5 rounded-[28px] border border-line p-5">
         <div className="flex items-end justify-between">
           <div className="flex flex-col gap-1.5">
             <div className="eyebrow">Save %</div>
-            <div className="font-display text-[88px] leading-[0.82] font-bold">{formatSvPct(all.svPct)}</div>
+            <div className="font-display text-[96px] leading-[0.82] font-bold">{formatSvPct(all.svPct)}</div>
           </div>
           <div className="flex flex-col items-end gap-1 pb-0.5">
             <div className="eyebrow">This period</div>
-            <div className="font-display text-[34px] leading-none font-bold text-save">{formatSvPct(cur.svPct)}</div>
-            <div className="text-[13px] text-muted">
+            <div className="font-display text-[36px] leading-none font-bold text-save">{formatSvPct(cur.svPct)}</div>
+            <div className="text-[13px] text-fg-2/80">
               {cur.shots} SA · {cur.goals} GA
             </div>
           </div>
@@ -133,10 +125,10 @@ export default function Entry() {
         <button
           type="button"
           onClick={handleUndo}
-          className="flex h-14 items-center gap-2.5 rounded-2xl border border-line-strong px-4 active:bg-panel"
+          className="surface flex h-14 items-center gap-3 rounded-[20px] border border-line px-4 active:bg-white/5"
         >
           <UndoIcon />
-          <span className="text-[15px] font-bold">Undo last</span>
+          <span className="text-base font-bold">Undo last</span>
           <span className="ml-auto text-[13px] text-muted">{last ? eventLabel(last) : 'Nothing to undo'}</span>
         </button>
 
@@ -144,29 +136,55 @@ export default function Entry() {
           <button
             type="button"
             onClick={() => log({ type: 'save', highDanger: false })}
-            className="flex h-32 flex-col items-center justify-center gap-1.5 rounded-[26px] bg-save text-save-ink active:scale-[0.97]"
+            className="fill-save flex h-[146px] flex-col items-center justify-center gap-2 rounded-[28px] border border-white/30 text-save-ink active:scale-[0.97]"
           >
-            <span className="font-display text-5xl leading-[0.9] font-bold tracking-[0.06em]">SAVE</span>
-            <span className="text-[13px] font-bold text-[#123a5c]">One tap · {periodLabel(period)}</span>
+            <span className="font-display text-[44px] leading-[0.9] font-bold tracking-[0.04em]">SAVE</span>
+            <span className="text-sm font-semibold">One tap · {periodLabel(period)}</span>
           </button>
           <button
             type="button"
             onClick={() => log({ type: 'save', highDanger: true })}
-            className="flex h-32 flex-col items-center justify-center gap-1.5 rounded-[26px] border-2 border-save bg-save-deep text-[#d6ecff] active:scale-[0.97]"
+            className="fill-hd flex h-[146px] flex-col items-center justify-center gap-1.5 rounded-[28px] border-2 border-save-line text-fg active:scale-[0.97]"
           >
-            <span className="font-display text-5xl leading-[0.9] font-bold tracking-[0.06em]">HD SAVE</span>
-            <span className="text-[13px] font-semibold text-save-soft">High danger</span>
+            <span className="font-display text-[40px] leading-[0.9] font-bold tracking-[0.04em]">
+              HD
+              <br />
+              SAVE
+            </span>
+            <span className="text-sm font-medium text-fg-2">High danger</span>
           </button>
         </div>
         <button
           type="button"
           onClick={() => log({ type: 'goal', highDanger: false })}
-          className="flex h-[84px] items-center justify-center gap-3.5 rounded-3xl bg-goal text-goal-ink active:scale-[0.98]"
+          className="fill-goal flex h-[90px] items-center justify-center gap-6 rounded-[28px] border border-white/25 text-goal-ink active:scale-[0.98]"
         >
-          <span className="font-display text-[40px] leading-none font-bold tracking-[0.06em]">GOAL</span>
-          <span className="text-[13px] font-bold text-[#4a2410]">Details optional</span>
+          <span className="font-display text-[44px] leading-none font-bold tracking-[0.04em]">GOAL</span>
+          <span className="text-sm font-semibold text-[#4a1a0c]">Details optional</span>
         </button>
       </div>
+
+      {showMenu && (
+        <BottomSheet title={`vs ${game.opponent}`} onClose={() => setShowMenu(false)}>
+          <div className="flex flex-col gap-2.5">
+            <Link
+              to={`/game/${game.id}/log`}
+              className="surface flex h-14 items-center gap-3 rounded-[18px] border border-line px-4 text-base font-bold"
+            >
+              <ListIcon size={20} />
+              Event log
+            </Link>
+            <button
+              type="button"
+              onClick={toggleFinal}
+              className="surface flex h-14 items-center gap-3 rounded-[18px] border border-line px-4 text-base font-bold"
+            >
+              <FlagIcon size={20} />
+              {game.final ? 'Reopen game' : 'End game'}
+            </button>
+          </div>
+        </BottomSheet>
+      )}
 
       {editing && (
         <EventSheet key={editing.id} event={editing} numPeriods={game.numPeriods} onClose={() => setEditingId(null)} />
@@ -177,9 +195,9 @@ export default function Entry() {
 
 function Tile({ value, label, className = '' }: { value: number; label: string; className?: string }) {
   return (
-    <div className="flex flex-col gap-0.5 rounded-[14px] bg-well px-3.5 py-3">
-      <div className={`font-display text-[32px] leading-none font-bold ${className}`}>{value}</div>
-      <div className="text-xs font-semibold text-muted">{label}</div>
+    <div className="tile flex flex-col gap-1.5 rounded-[18px] px-3.5 py-4">
+      <div className={`font-display text-[34px] leading-none font-bold ${className}`}>{value}</div>
+      <div className="text-sm text-fg-2/80">{label}</div>
     </div>
   );
 }
