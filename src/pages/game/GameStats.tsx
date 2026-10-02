@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import BackupNudge from '../../components/BackupNudge';
 import { HdTag } from '../../components/Badges';
 import EventSheet from '../../components/EventSheet';
 import { ListIcon, ShieldIcon, TrashIcon } from '../../components/Icons';
@@ -43,6 +44,8 @@ export default function GameStats() {
   return (
     <div className="flex flex-col gap-4 pb-6">
       <GameHeader eyebrow={<StatusEyebrow game={game} prefix={formatGameDate(game.date)} />} title={`vs ${game.opponent}`} />
+
+      {game.final && <BackupNudge className="mx-4" />}
 
       {all.shots === 0 ? (
         <Card>

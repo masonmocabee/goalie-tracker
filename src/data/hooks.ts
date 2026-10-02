@@ -27,6 +27,19 @@ export function useGamesWithEvents(): GameWithEvents[] | undefined {
   });
 }
 
+/** Newest `updatedAt` across all records, deletes included (for the backup nudge). */
+export function useLatestChange(): string | undefined {
+  return useLiveQuery(async () => {
+    let latest = '';
+    const check = (r: { updatedAt: string }) => {
+      if (r.updatedAt > latest) latest = r.updatedAt;
+    };
+    await db.games.each(check);
+    await db.events.each(check);
+    return latest || undefined;
+  });
+}
+
 /** A single game; null if it doesn't exist or was deleted. */
 export function useGame(id: string | undefined): Game | null | undefined {
   return useLiveQuery(async () => {

@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import TabLayout from './components/TabLayout';
+import Data from './pages/Data';
 import GamesList from './pages/GamesList';
 import Season from './pages/Season';
 import Entry from './pages/game/Entry';
@@ -13,6 +14,7 @@ export default function App() {
       <Route element={<TabLayout />}>
         <Route path="/" element={<GamesList />} />
         <Route path="/season" element={<Season />} />
+        <Route path="/data" element={<Data />} />
       </Route>
       <Route path="/game/:id" element={<GameLayout />}>
         <Route index element={<GameIndex />} />

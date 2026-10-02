@@ -115,3 +115,27 @@ export const GripIcon =({ size = 18, className }: IconProps) => (
     <circle cx="15" cy="18" r="1.6" />
   </svg>
 );
+
+export const DataIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <ellipse cx="12" cy="5" rx="8" ry="3" />
+    <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" />
+    <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" />
+  </Svg>
+);
+
+export const UploadIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 15V3" />
+    <path d="M7 8l5-5 5 5" />
+    <path d="M4 15v4a2 2 0 002 2h12a2 2 0 002-2v-4" />
+  </Svg>
+);
+
+export const DownloadIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 3v12" />
+    <path d="M7 10l5 5 5-5" />
+    <path d="M4 15v4a2 2 0 002 2h12a2 2 0 002-2v-4" />
+  </Svg>
+);
