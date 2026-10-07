@@ -9,7 +9,7 @@ import { formatGaa, formatShortDate, seasonLabel, todayIso } from '../lib/format
 import { periodLabel } from '../lib/periods';
 import { formatSvPct, type ShotTotals } from '../stats/gameStats';
 import { filterGames, seasonStats, type DateRange, type SeasonStats } from '../stats/seasonStats';
-import { GOAL_REASON_LABELS } from '../types';
+import { GOAL_DETAIL_LABELS, GOAL_REASON_LABELS } from '../types';
 
 const SV_FLOOR = 0.7; // by-period bars are scaled .700 to 1.000
 
@@ -23,7 +23,6 @@ export default function Season() {
   const opponents = [...new Set(games.map((g) => g.game.opponent))].sort();
   const s = seasonStats(filterGames(games, { range, opponent }, today), today);
   const perGame = (n: number) => (s.games ? (n / s.games).toFixed(1) : '—');
-  const maxReason = Math.max(1, ...s.goalsByReason.map((r) => r.count));
   const hdGoalShare = s.overall.goals ? (s.highDanger.goals / s.overall.goals) * 100 : 0;
 
   return (
@@ -144,27 +143,23 @@ export default function Season() {
               <div className="text-xs text-muted">Bar = SV%, scaled .700 to 1.000</div>
             </Card>
 
+            <Card title="Goals by detail">
+              <CountBars
+                rows={s.goalsByDetail.map(({ detail, count }) => ({ key: detail, label: GOAL_DETAIL_LABELS[detail], count }))}
+                empty="No goal details filled in yet."
+                missing={s.goalsMissingDetail}
+                missingWhat="a detail"
+                note="A goal with several details counts under each."
+              />
+            </Card>
+
             <Card title="Goals by reason">
-              {s.goalsByReason.length === 0 ? (
-                <p className="text-sm text-muted">No goal reasons filled in yet.</p>
-              ) : (
-                <div className="flex flex-col gap-2.5">
-                  {s.goalsByReason.map(({ reason, count }) => (
-                    <div key={reason} className="grid grid-cols-[104px_minmax(0,1fr)_24px] items-center gap-2.5 text-[13px]">
-                      <span className="font-semibold text-fg-2">{GOAL_REASON_LABELS[reason]}</span>
-                      <div className="h-3.5">
-                        <div className="h-full rounded bg-goal" style={{ width: `${(count / maxReason) * 100}%` }} />
-                      </div>
-                      <span className="text-right font-extrabold">{count}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {s.goalsMissingReason > 0 && (
-                <div className="text-xs text-muted">
-                  {s.goalsMissingReason} goal{s.goalsMissingReason === 1 ? '' : 's'} without a reason yet
-                </div>
-              )}
+              <CountBars
+                rows={s.goalsByReason.map(({ reason, count }) => ({ key: reason, label: GOAL_REASON_LABELS[reason], count }))}
+                empty="No goal reasons filled in yet."
+                missing={s.goalsMissingReason}
+                missingWhat="a reason"
+              />
             </Card>
 
             <Card title="Net heat map">
@@ -185,6 +180,45 @@ export default function Season() {
         </>
       )}
     </div>
+  );
+}
+
+interface CountBarsProps {
+  rows: { key: string; label: string; count: number }[];
+  empty: string;
+  missing: number;
+  missingWhat: string;
+  note?: string;
+}
+
+/** Horizontal bar per category, longest = most goals. */
+function CountBars({ rows, empty, missing, missingWhat, note }: CountBarsProps) {
+  const max = Math.max(1, ...rows.map((r) => r.count));
+  return (
+    <>
+      {rows.length === 0 ? (
+        <p className="text-sm text-muted">{empty}</p>
+      ) : (
+        <div className="flex flex-col gap-2.5">
+          {rows.map(({ key, label, count }) => (
+            <div key={key} className="grid grid-cols-[104px_minmax(0,1fr)_24px] items-center gap-2.5 text-[13px]">
+              <span className="font-semibold text-fg-2">{label}</span>
+              <div className="h-3.5">
+                <div className="h-full rounded bg-goal" style={{ width: `${(count / max) * 100}%` }} />
+              </div>
+              <span className="text-right font-extrabold">{count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {(missing > 0 || (note && rows.length > 0)) && (
+        <div className="text-xs text-muted">
+          {[missing > 0 && `${missing} goal${missing === 1 ? '' : 's'} without ${missingWhat} yet`, rows.length > 0 && note]
+            .filter(Boolean)
+            .join(' · ')}
+        </div>
+      )}
+    </>
   );
 }
 

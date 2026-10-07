@@ -1,7 +1,9 @@
 import type { Game, ShotEvent } from '../types';
+import { migrateEvent } from './migrate';
 import { periodLabel, sortEvents } from './periods';
 
-export const SCHEMA_VERSION = 1;
+/** 2: goal reason split into details + reason. Version 1 files are converted on import. */
+export const SCHEMA_VERSION = 2;
 
 export interface BackupFile {
   schemaVersion: number;
@@ -33,7 +35,7 @@ export function validateBackup(json: unknown): BackupFile {
     throw new Error("This file isn't a Goalie Tracker backup.");
   }
   const file = json as Partial<BackupFile>;
-  if (file.schemaVersion !== SCHEMA_VERSION) {
+  if (file.schemaVersion !== 1 && file.schemaVersion !== SCHEMA_VERSION) {
     throw new Error(
       `This backup uses format version ${String(file.schemaVersion)}, which this version of the app can't read. Update the app and try again.`,
     );
@@ -44,7 +46,7 @@ export function validateBackup(json: unknown): BackupFile {
   if (!file.games.every(isRecord) || !file.events.every((e) => isRecord(e) && typeof e.gameId === 'string')) {
     throw new Error('This backup has damaged records and was not imported.');
   }
-  return file as BackupFile;
+  return { ...(file as BackupFile), events: (file.events as ShotEvent[]).map(migrateEvent) };
 }
 
 const CSV_COLUMNS = [
@@ -57,6 +59,7 @@ const CSV_COLUMNS = [
   'high_danger',
   'clock',
   'net_zone',
+  'details',
   'reason',
   'strength',
   'notes',
@@ -89,6 +92,7 @@ export function toCsv(games: Game[], events: ShotEvent[]): string {
           e.highDanger ? 'yes' : 'no',
           e.gameClock,
           e.netZone,
+          e.details?.join('; '),
           e.reason,
           e.strength,
           e.notes,

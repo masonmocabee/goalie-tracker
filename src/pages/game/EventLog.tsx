@@ -6,6 +6,7 @@ import { insertEvent, moveEvent, updateEvent, type NewEventFields } from '../../
 import { findDropTarget, type DropTarget } from '../../lib/dragDrop';
 import { periodLabel, periodsFor } from '../../lib/periods';
 import { formatSvPct, needsDetails, periodTotals } from '../../stats/gameStats';
+import { detailsLabel } from '../../lib/format';
 import { GOAL_REASON_LABELS, NET_ZONE_LABELS, type Period, type ShotEvent } from '../../types';
 import { GameHeader, useGameContext } from './GameLayout';
 
@@ -323,6 +324,7 @@ function EventRow({ event, onClick, dragHandlers, offsetY, rowRef }: EventRowPro
   const dragging = offsetY !== undefined;
   const detail = [
     event.netZone && NET_ZONE_LABELS[event.netZone],
+    detailsLabel(event.details),
     event.reason && GOAL_REASON_LABELS[event.reason],
     event.strength && event.strength !== 'EV' && event.strength,
     event.notes,

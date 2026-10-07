@@ -3,8 +3,10 @@ import { deleteEvent, updateEvent } from '../data/events';
 import { normalizeClock } from '../lib/format';
 import { periodLabel, periodName, periodsFor } from '../lib/periods';
 import {
+  GOAL_DETAIL_LABELS,
   GOAL_REASON_LABELS,
   HIGH_DANGER_HELP,
+  type GoalDetail,
   type GoalReason,
   type ShotEvent,
   type Strength,
@@ -129,7 +131,22 @@ export default function EventSheet({ event, numPeriods, onClose, full = false }:
         )}
 
         {isGoal && (
-          <Section label="Reason">
+          <Section label="Goal detail" hint="Pick any">
+            <div className="flex flex-wrap gap-2">
+              {(Object.entries(GOAL_DETAIL_LABELS) as [GoalDetail, string][]).map(([d, label]) => {
+                const on = event.details?.includes(d) ?? false;
+                return (
+                  <Chip key={d} selected={on} onClick={() => save({ details: toggle(event.details, d) })}>
+                    {label}
+                  </Chip>
+                );
+              })}
+            </div>
+          </Section>
+        )}
+
+        {isGoal && (
+          <Section label="Reason" hint="Pick one">
             <div className="flex flex-wrap gap-2">
               {(Object.entries(GOAL_REASON_LABELS) as [GoalReason, string][]).map(([r, label]) => (
                 <Chip
@@ -209,10 +226,22 @@ export default function EventSheet({ event, numPeriods, onClose, full = false }:
   );
 }
 
-function Section({ label, children }: { label: string; children: ReactNode }) {
+/** Add or remove one detail, keeping them in the order they're listed in. */
+function toggle(details: GoalDetail[] | undefined, d: GoalDetail): GoalDetail[] | undefined {
+  const set = new Set(details);
+  if (set.has(d)) set.delete(d);
+  else set.add(d);
+  const next = (Object.keys(GOAL_DETAIL_LABELS) as GoalDetail[]).filter((k) => set.has(k));
+  return next.length ? next : undefined;
+}
+
+function Section({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-2.5">
-      <h3 className="eyebrow">{label}</h3>
+      <h3 className="eyebrow flex items-baseline gap-2">
+        {label}
+        {hint && <span className="text-[11px] font-semibold tracking-normal text-faint normal-case">{hint}</span>}
+      </h3>
       {children}
     </section>
   );

@@ -37,9 +37,9 @@ export function lastLogged(events: ShotEvent[]): ShotEvent | undefined {
   return latest;
 }
 
-/** A goal needs details when its net zone or reason hasn't been filled in. */
+/** A goal needs details when its net zone, detail or reason hasn't been filled in. */
 export function needsDetails(e: ShotEvent): boolean {
-  return e.type === 'goal' && !e.deleted && (!e.netZone || !e.reason);
+  return e.type === 'goal' && !e.deleted && (!e.netZone || !e.details?.length || !e.reason);
 }
 
 /** Hockey-style save percentage, e.g. ".917". */

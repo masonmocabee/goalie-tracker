@@ -7,7 +7,7 @@ import { ListIcon, ShieldIcon, TrashIcon } from '../../components/Icons';
 import NetDiagram from '../../components/NetDiagram';
 import RinkDiagram from '../../components/RinkDiagram';
 import { deleteGame } from '../../data/games';
-import { formatGameDate, todayIso } from '../../lib/format';
+import { detailsLabel, formatGameDate, todayIso } from '../../lib/format';
 import { periodLabel, periodsFor } from '../../lib/periods';
 import { formatSvPct, highDangerTotals, needsDetails, periodTotals, totals } from '../../stats/gameStats';
 import { isShutout } from '../../stats/seasonStats';
@@ -172,9 +172,11 @@ export default function GameStats() {
 
 function GoalCard({ goal, number, onClick }: { goal: ShotEvent; number: number; onClick: () => void }) {
   const missing = needsDetails(goal);
-  const what = [goal.netZone && NET_ZONE_LABELS[goal.netZone], goal.reason && GOAL_REASON_LABELS[goal.reason]].filter(
-    Boolean,
-  );
+  const what = [
+    goal.netZone && NET_ZONE_LABELS[goal.netZone],
+    detailsLabel(goal.details),
+    goal.reason && GOAL_REASON_LABELS[goal.reason],
+  ].filter(Boolean);
   const when = [periodLabel(goal.period), goal.gameClock ?? 'no clock', goal.strength].filter(Boolean).join(' · ');
 
   return (

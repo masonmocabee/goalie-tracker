@@ -41,10 +41,13 @@ describe('totals', () => {
 });
 
 describe('needsDetails', () => {
-  it('flags goals missing zone or reason', () => {
+  it('flags goals missing zone, detail or reason', () => {
     expect(needsDetails(ev({ type: 'goal' }))).toBe(true);
-    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole' }))).toBe(true);
-    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole', reason: 'screen' }))).toBe(false);
+    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole', reason: 'focus' }))).toBe(true);
+    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole', details: [], reason: 'focus' }))).toBe(true);
+    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole', details: ['screen'] }))).toBe(true);
+    expect(needsDetails(ev({ type: 'goal', details: ['screen'], reason: 'focus' }))).toBe(true);
+    expect(needsDetails(ev({ type: 'goal', netZone: 'five_hole', details: ['screen'], reason: 'focus' }))).toBe(false);
   });
 
   it('never flags saves or deleted goals', () => {

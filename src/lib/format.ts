@@ -1,3 +1,5 @@
+import { GOAL_DETAIL_LABELS, type GoalDetail } from '../types';
+
 /** Today's date as YYYY-MM-DD in local time. */
 export function todayIso(): string {
   const d = new Date();
@@ -45,4 +47,9 @@ export function normalizeClock(raw: string): string {
   const s = raw.trim();
   if (/^\d{3,4}$/.test(s)) return `${Number(s.slice(0, -2))}:${s.slice(-2)}`;
   return s;
+}
+
+/** ["screen", "deflection"] -> "Screen + Deflection" */
+export function detailsLabel(details: GoalDetail[] | undefined): string | undefined {
+  return details?.length ? details.map((d) => GOAL_DETAIL_LABELS[d]).join(' + ') : undefined;
 }

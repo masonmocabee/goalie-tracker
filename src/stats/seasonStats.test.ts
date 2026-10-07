@@ -46,12 +46,12 @@ describe('seasonStats', () => {
     const g1 = [
       ev({ type: 'save' }),
       ev({ type: 'save', highDanger: true }),
-      ev({ type: 'goal', highDanger: true, reason: 'rebound', netZone: 'glove_high' }),
+      ev({ type: 'goal', highDanger: true, details: ['rebound'], reason: 'effort', netZone: 'glove_high' }),
     ];
     const g2 = [
       ev({ type: 'save', period: 'OT' }),
-      ev({ type: 'goal', period: 2, reason: 'rebound', netZone: 'left_pad_low' }),
-      ev({ type: 'goal', period: 2, reason: 'screen', netZone: 'glove_high' }),
+      ev({ type: 'goal', period: 2, details: ['rebound', 'screen'], reason: 'effort', netZone: 'left_pad_low' }),
+      ev({ type: 'goal', period: 2, details: ['screen'], reason: 'focus', netZone: 'glove_high' }),
       ev({ type: 'goal', period: 3 }),
       ev({ type: 'goal', deleted: true }),
     ];
@@ -67,10 +67,15 @@ describe('seasonStats', () => {
     expect(s.byPeriod.map((p) => p.period)).toEqual([1, 2, 3, 'OT']);
     expect(s.byPeriod[1].stats).toMatchObject({ shots: 2, goals: 2 });
     expect(s.goalsByReason).toEqual([
-      { reason: 'rebound', count: 2 },
-      { reason: 'screen', count: 1 },
+      { reason: 'effort', count: 2 },
+      { reason: 'focus', count: 1 },
+    ]);
+    expect(s.goalsByDetail).toEqual([
+      { detail: 'rebound', count: 2 },
+      { detail: 'screen', count: 2 },
     ]);
     expect(s.goalsMissingReason).toBe(1);
+    expect(s.goalsMissingDetail).toBe(1);
     expect(s.goalsByZone).toEqual({ glove_high: 2, left_pad_low: 1 });
   });
 

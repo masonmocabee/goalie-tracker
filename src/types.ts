@@ -28,18 +28,20 @@ export type NetZone =
   | 'right_pad_low' // goalie's right (blocker side)
   | 'unknown';
 
-export type GoalReason =
-  | 'screen'
-  | 'rebound'
-  | 'deflection'
+/** What kind of chance it was (any number can apply). */
+export type GoalDetail =
+  | 'point_blank'
   | 'breakaway'
   | 'odd_man_rush'
   | 'cross_crease'
-  | 'wraparound'
+  | 'rebound'
   | 'bad_angle'
-  | 'scramble'
-  | 'soft_goal'
-  | 'other';
+  | 'screen'
+  | 'deflection'
+  | 'wraparound';
+
+/** Why it went in, from the goalie's side (pick one). */
+export type GoalReason = 'clean_beat' | 'technique' | 'effort' | 'focus' | 'reaction';
 
 /** Where a goal was shot from, as fractions (0-1) across and down the half-rink diagram (net at the top). */
 export interface ShotOrigin {
@@ -58,6 +60,7 @@ export interface ShotEvent {
   highDanger: boolean;
   gameClock?: string; // "MM:SS", label only
   netZone?: NetZone;
+  details?: GoalDetail[];
   reason?: GoalReason;
   strength?: Strength;
   shotOrigin?: ShotOrigin; // goals only
@@ -78,18 +81,24 @@ export const NET_ZONE_LABELS: Record<NetZone, string> = {
   unknown: 'Unknown',
 };
 
-export const GOAL_REASON_LABELS: Record<GoalReason, string> = {
-  screen: 'Screen',
-  rebound: 'Rebound',
-  deflection: 'Deflection',
+export const GOAL_DETAIL_LABELS: Record<GoalDetail, string> = {
+  point_blank: 'Point blank',
   breakaway: 'Breakaway',
   odd_man_rush: 'Odd-man rush',
   cross_crease: 'Cross-crease',
-  wraparound: 'Wraparound',
+  rebound: 'Rebound',
   bad_angle: 'Bad angle',
-  scramble: 'Scramble',
-  soft_goal: 'Soft goal',
-  other: 'Other',
+  screen: 'Screen',
+  deflection: 'Deflection',
+  wraparound: 'Wraparound',
+};
+
+export const GOAL_REASON_LABELS: Record<GoalReason, string> = {
+  clean_beat: 'Clean beat',
+  technique: 'Technique',
+  effort: 'Effort',
+  focus: 'Focus',
+  reaction: 'Reaction',
 };
 
 export const HIGH_DANGER_HELP =

@@ -73,7 +73,8 @@ interface ShotEvent {
   gameClock?: string;    // optional, "MM:SS"; label only, NOT used for ordering
   // Goal-only fields (all optional; can be filled in later)
   netZone?: NetZone;
-  reason?: GoalReason;
+  details?: GoalDetail[]; // what kind of chance (multi-select)
+  reason?: GoalReason;    // why it went in, goalie side (single select)
   strength?: 'EV' | 'PP' | 'PK';
   shotOrigin?: { x: number; y: number }; // where it was shot from: fractions (0-1) of the half-rink diagram, net at top
   notes?: string;
@@ -91,10 +92,13 @@ type NetZone =
 // glove_low / blocker_low = above the pad, below the glove/blocker.
 // The goalie catches left: glove = goalie's left = shooter's right.
 
-type GoalReason =
-  | 'screen' | 'rebound' | 'deflection' | 'breakaway'
-  | 'odd_man_rush' | 'cross_crease' | 'wraparound'
-  | 'bad_angle' | 'scramble' | 'soft_goal' | 'other';
+type GoalDetail =
+  | 'point_blank' | 'breakaway' | 'odd_man_rush' | 'cross_crease'
+  | 'rebound' | 'bad_angle' | 'screen' | 'deflection' | 'wraparound';
+
+type GoalReason = 'clean_beat' | 'technique' | 'effort' | 'focus' | 'reaction';
+// Before DB/backup v2 a single `reason` held the old mixed list. src/lib/migrate.ts moves values
+// that are now details into `details` and drops scramble / soft_goal / other, without touching updatedAt.
 ```
 
 ### Ordering
@@ -138,7 +142,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 
 - Net diagram (SVG) with tappable zones.
 - Shot location: tap roughly where the goal was shot from on a half-rink diagram (`RinkDiagram`); tap again to move, Clear to remove.
-- Reason chips (single select).
+- Goal detail chips (multi-select) and reason chips (single select).
 - High danger toggle.
 - Strength (EV/PP/PK), optional game clock, notes.
 - **Everything is skippable.** "Done" is always enabled.
@@ -146,7 +150,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 ### 4. Event log (reconciliation)
 
 - Timeline grouped by period, ordered by `sortKey`.
-- Each row shows: type, HD marker, clock (if set), and goal zone/reason; plus a "needs details" badge on goals missing zone or reason.
+- Each row shows: type, HD marker, clock (if set), and goal zone/details/reason; plus a "needs details" badge on goals missing zone, detail or reason.
 - Tap a row to edit any field (type, period, HD, goal details) or delete it.
 - **"+ Insert here"** affordance between every pair of rows and at the end of each period. It opens a quick picker (Save / HD Save / Goal) and inserts at that position.
 - New inserts default to the period of the gap they were inserted into.
@@ -155,7 +159,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 
 - Totals: shots, saves, goals, SV%, HDSV%.
 - Per-period table: shots, saves, goals, SV%.
-- Goals list with zone, reason, and HD.
+- Goals list with zone, details, reason, and HD.
 - Goal location: half-rink diagram with each goal's number where it was shot from.
 - Net diagram showing where this game's goals went in.
 
@@ -166,7 +170,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 - **Shutouts:** called out (count + each game) when there are any. A shutout is a finished game (ended, or dated before today) with shots against and no goals. Also badged on the games list and the game's Stats tab.
 - **By period:** SV% and goals against for P1 / P2 / P3 / OT.
 - **Goals breakdown:**
-  - Bar chart by reason
+  - Bar charts by detail (a goal counts under each of its details) and by reason
   - Net zone heat map (custom SVG)
   - Goal location heat map on the half-rink diagram (glow that brightens where goals cluster)
   - HD vs non-HD split
@@ -188,7 +192,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 - **Import upserts by `id`.** If a record exists, keep whichever has the newer `updatedAt`. Otherwise insert it.
 - Soft deletes merge like any other update, so deletes propagate.
 - Re-importing the same file is idempotent: no duplicates.
-- Validate `schemaVersion`; reject unknown versions with a clear message.
+- Validate `schemaVersion` (current: 2; version 1 files are migrated on import); reject unknown versions with a clear message.
 - Show a summary after import: X games / Y events added, Z updated.
 - **Sync direction for v1:** phone → desktop (one-way by convention). The merge logic supports two-way, but the UI doesn't need to.
 
@@ -209,7 +213,7 @@ Complete and test each milestone on the Android phone before starting the next.
    - Games list and new-game form
    - Live screen with SAVE / HD SAVE / GOAL / Undo, period selector, running stats
 2. **Goal details + reconciliation**
-   - Goal detail sheet with net zones and reasons
+   - Goal detail sheet with net zones, details and reasons
    - Event log with edit, delete, and "insert here" using `sortKey`
    - "Needs details" badges
 3. **Game summary + data portability**

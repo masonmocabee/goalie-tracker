@@ -1,5 +1,5 @@
 import { comparePeriod } from '../lib/periods';
-import type { Game, GoalReason, NetZone, Period, ShotEvent, ShotOrigin } from '../types';
+import type { Game, GoalDetail, GoalReason, NetZone, Period, ShotEvent, ShotOrigin } from '../types';
 import { highDangerTotals, totals, type ShotTotals } from './gameStats';
 
 export interface GameEvents {
@@ -28,6 +28,9 @@ export interface SeasonStats {
   shutouts: { gameId: string; date: string; opponent: string; saves: number }[];
   /** Only periods that have at least one shot, in period order (OT last). */
   byPeriod: { period: Period; stats: ShotTotals }[];
+  /** A goal with several details counts once under each. Most common first. */
+  goalsByDetail: { detail: GoalDetail; count: number }[];
+  goalsMissingDetail: number;
   goalsByReason: { reason: GoalReason; count: number }[]; // most common first
   goalsByZone: Partial<Record<NetZone, number>>;
   /** Where goals were shot from, for those that have a location. */
@@ -54,10 +57,14 @@ export function seasonStats(games: GameEvents[], today: string): SeasonStats {
   const all = live.flatMap((g) => g.events);
   const goals = all.filter((e) => e.type === 'goal');
 
+  const detailCounts = new Map<GoalDetail, number>();
+  let goalsMissingDetail = 0;
   const reasonCounts = new Map<GoalReason, number>();
   const goalsByZone: Partial<Record<NetZone, number>> = {};
   let goalsMissingReason = 0;
   for (const g of goals) {
+    for (const d of g.details ?? []) detailCounts.set(d, (detailCounts.get(d) ?? 0) + 1);
+    if (!g.details?.length) goalsMissingDetail++;
     if (g.reason) reasonCounts.set(g.reason, (reasonCounts.get(g.reason) ?? 0) + 1);
     else goalsMissingReason++;
     if (g.netZone) goalsByZone[g.netZone] = (goalsByZone[g.netZone] ?? 0) + 1;
@@ -83,6 +90,10 @@ export function seasonStats(games: GameEvents[], today: string): SeasonStats {
         saves: totals(events).saves,
       })),
     byPeriod: periods.map((period) => ({ period, stats: totals(all.filter((e) => e.period === period)) })),
+    goalsByDetail: [...detailCounts]
+      .map(([detail, count]) => ({ detail, count }))
+      .sort((a, b) => b.count - a.count),
+    goalsMissingDetail,
     goalsByReason: [...reasonCounts]
       .map(([reason, count]) => ({ reason, count }))
       .sort((a, b) => b.count - a.count),
