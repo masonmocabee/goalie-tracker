@@ -60,6 +60,8 @@ const CSV_COLUMNS = [
   'reason',
   'strength',
   'notes',
+  'shot_x',
+  'shot_y',
 ];
 
 function csvCell(value: string | number | boolean | undefined): string {
@@ -90,6 +92,8 @@ export function toCsv(games: Game[], events: ShotEvent[]): string {
           e.reason,
           e.strength,
           e.notes,
+          e.shotOrigin?.x,
+          e.shotOrigin?.y,
         ]
           .map(csvCell)
           .join(','),

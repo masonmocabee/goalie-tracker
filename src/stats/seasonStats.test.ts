@@ -74,6 +74,28 @@ describe('seasonStats', () => {
     expect(s.goalsByZone).toEqual({ glove_high: 2, left_pad_low: 1 });
   });
 
+  it('collects goal locations, skipping saves, deleted goals and goals without one', () => {
+    const s = seasonStats(
+      [
+        {
+          game: game({}),
+          events: [
+            ev({ type: 'goal', shotOrigin: { x: 0.5, y: 0.3 } }),
+            ev({ type: 'goal' }),
+            ev({ type: 'goal', shotOrigin: { x: 0.1, y: 0.1 }, deleted: true }),
+            ev({ type: 'save', shotOrigin: { x: 0.9, y: 0.9 } }),
+          ],
+        },
+        { game: game({}), events: [ev({ type: 'goal', shotOrigin: { x: 0.4, y: 0.2 } })] },
+      ],
+      TODAY,
+    );
+    expect(s.goalOrigins).toEqual([
+      { x: 0.5, y: 0.3 },
+      { x: 0.4, y: 0.2 },
+    ]);
+  });
+
   it('computes GAA as goals against per game', () => {
     const s = seasonStats(
       [

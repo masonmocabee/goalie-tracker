@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldIcon } from '../components/Icons';
 import NetDiagram from '../components/NetDiagram';
+import RinkDiagram from '../components/RinkDiagram';
 import TrendChart from '../components/TrendChart';
 import { useGamesWithEvents } from '../data/hooks';
 import { formatGaa, formatShortDate, seasonLabel, todayIso } from '../lib/format';
@@ -169,6 +170,17 @@ export default function Season() {
             <Card title="Net heat map">
               <NetDiagram counts={s.goalsByZone} />
             </Card>
+
+            <Card title="Goal location heat map">
+              <RinkDiagram heat={s.goalOrigins} />
+              <div className="text-xs text-muted">
+                {s.goalOrigins.length === 0
+                  ? 'No goal locations yet. Tap where a goal was shot from in its details.'
+                  : s.goalOrigins.length < s.overall.goals
+                    ? `${s.goalOrigins.length} of ${s.overall.goals} goals placed · brighter = more goals`
+                    : 'Brighter = more goals'}
+              </div>
+            </Card>
           </div>
         </>
       )}
@@ -210,7 +222,7 @@ function ShutoutCallout({ shutouts }: { shutouts: SeasonStats['shutouts'] }) {
 function Card({ title, className = '', children }: { title: string; className?: string; children: ReactNode }) {
   return (
     <section className={`flex flex-col gap-4 rounded-3xl surface border border-line px-5 py-5 md:px-6 ${className}`}>
-      <h2 className="text-base font-extrabold">{title}</h2>
+      <h2 className="eyebrow">{title}</h2>
       {children}
     </section>
   );
@@ -219,7 +231,7 @@ function Card({ title, className = '', children }: { title: string; className?: 
 function Kpi({ label, value, sub, className = '' }: { label: string; value: string; sub: string; className?: string }) {
   return (
     <div className="flex flex-col gap-1.5 rounded-[20px] surface border border-line px-5 py-4">
-      <div className="text-xs font-bold tracking-[0.1em] text-muted uppercase">{label}</div>
+      <div className="eyebrow">{label}</div>
       <div className={`font-display text-[44px] leading-none font-bold ${className}`}>{value}</div>
       <div className="text-xs text-muted">{sub}</div>
     </div>

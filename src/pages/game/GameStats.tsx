@@ -5,6 +5,7 @@ import { HdTag } from '../../components/Badges';
 import EventSheet from '../../components/EventSheet';
 import { ListIcon, ShieldIcon, TrashIcon } from '../../components/Icons';
 import NetDiagram from '../../components/NetDiagram';
+import RinkDiagram from '../../components/RinkDiagram';
 import { deleteGame } from '../../data/games';
 import { formatGameDate, todayIso } from '../../lib/format';
 import { periodLabel, periodsFor } from '../../lib/periods';
@@ -40,6 +41,8 @@ export default function GameStats() {
     if (!g.netZone) return;
     (markers[g.netZone] ??= []).push(i + 1);
   });
+
+  const rinkMarkers = goals.flatMap((g, i) => (g.shotOrigin ? [{ origin: g.shotOrigin, label: String(i + 1) }] : []));
 
   return (
     <div className="flex flex-col gap-4 pb-6">
@@ -118,6 +121,16 @@ export default function GameStats() {
 
           {goals.length > 0 && (
             <>
+              <Card title="Goal location">
+                <RinkDiagram markers={rinkMarkers} />
+                {rinkMarkers.length < goals.length && (
+                  <p className="text-xs text-muted">
+                    {rinkMarkers.length === 0 ? 'No locations yet.' : `${goals.length - rinkMarkers.length} not placed.`} Tap a goal
+                    below to mark where it was shot from.
+                  </p>
+                )}
+              </Card>
+
               <Card title="Where they went in">
                 <NetDiagram markers={markers} />
               </Card>

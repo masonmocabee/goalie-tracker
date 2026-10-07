@@ -47,14 +47,14 @@ describe('toCsv', () => {
     const csv = toCsv(
       [game()],
       [
-        ev({ id: 'b', period: 2, sortKey: 1000, type: 'goal', netZone: 'five_hole', reason: 'screen', strength: 'PP', gameClock: '4:12' }),
+        ev({ id: 'b', period: 2, sortKey: 1000, type: 'goal', netZone: 'five_hole', reason: 'screen', strength: 'PP', gameClock: '4:12', shotOrigin: { x: 0.5, y: 0.3 } }),
         ev({ id: 'a', period: 1, sortKey: 1000, highDanger: true }),
       ],
     );
     expect(csv.split('\r\n')).toEqual([
-      'date,opponent,home_away,period,order,type,high_danger,clock,net_zone,reason,strength,notes',
-      '2026-10-01,Ice Hawks,home,P1,1,save,yes,,,,,',
-      '2026-10-01,Ice Hawks,home,P2,2,goal,no,4:12,five_hole,screen,PP,',
+      'date,opponent,home_away,period,order,type,high_danger,clock,net_zone,reason,strength,notes,shot_x,shot_y',
+      '2026-10-01,Ice Hawks,home,P1,1,save,yes,,,,,,,',
+      '2026-10-01,Ice Hawks,home,P2,2,goal,no,4:12,five_hole,screen,PP,,0.5,0.3',
       '',
     ]);
   });

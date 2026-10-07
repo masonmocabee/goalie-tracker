@@ -41,6 +41,12 @@ export type GoalReason =
   | 'soft_goal'
   | 'other';
 
+/** Where a goal was shot from, as fractions (0-1) across and down the half-rink diagram (net at the top). */
+export interface ShotOrigin {
+  x: number;
+  y: number;
+}
+
 export type Strength = 'EV' | 'PP' | 'PK';
 
 export interface ShotEvent {
@@ -54,6 +60,7 @@ export interface ShotEvent {
   netZone?: NetZone;
   reason?: GoalReason;
   strength?: Strength;
+  shotOrigin?: ShotOrigin; // goals only
   notes?: string;
   createdAt: string;
   updatedAt: string;

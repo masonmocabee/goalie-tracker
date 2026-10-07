@@ -75,6 +75,7 @@ interface ShotEvent {
   netZone?: NetZone;
   reason?: GoalReason;
   strength?: 'EV' | 'PP' | 'PK';
+  shotOrigin?: { x: number; y: number }; // where it was shot from: fractions (0-1) of the half-rink diagram, net at top
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -136,6 +137,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 ### 3. Goal detail sheet (bottom sheet)
 
 - Net diagram (SVG) with tappable zones.
+- Shot location: tap roughly where the goal was shot from on a half-rink diagram (`RinkDiagram`); tap again to move, Clear to remove.
 - Reason chips (single select).
 - High danger toggle.
 - Strength (EV/PP/PK), optional game clock, notes.
@@ -154,7 +156,8 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 - Totals: shots, saves, goals, SV%, HDSV%.
 - Per-period table: shots, saves, goals, SV%.
 - Goals list with zone, reason, and HD.
-- Net diagram showing this game's goal locations.
+- Goal location: half-rink diagram with each goal's number where it was shot from.
+- Net diagram showing where this game's goals went in.
 
 ### 6. Season dashboard
 
@@ -165,6 +168,7 @@ Visual design: the "Goalie Tracker" Design canvas (claude.ai artifact DZH141E3LL
 - **Goals breakdown:**
   - Bar chart by reason
   - Net zone heat map (custom SVG)
+  - Goal location heat map on the half-rink diagram (glow that brightens where goals cluster)
   - HD vs non-HD split
 - **Trends:** SV% and HDSV% game over game (line chart).
 - **Filters:** date range, opponent.
@@ -223,7 +227,7 @@ Complete and test each milestone on the Android phone before starting the next.
 
 ### Later (not in v1)
 
-- Shot origin location on a rink diagram
+- Shot origin location for saves (goals already have it)
 - Missed and blocked shot types
 - Multiple goalies
 - Cloud sync (e.g. Supabase) behind the existing data-access layer, for viewing stats on another device

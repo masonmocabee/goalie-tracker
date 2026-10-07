@@ -13,6 +13,7 @@ import BottomSheet from './BottomSheet';
 import Chip from './Chip';
 import { CheckIcon } from './Icons';
 import NetDiagram from './NetDiagram';
+import RinkDiagram from './RinkDiagram';
 import Segmented from './Segmented';
 
 interface Props {
@@ -106,6 +107,24 @@ export default function EventSheet({ event, numPeriods, onClose, full = false }:
         {isGoal && (
           <Section label="Net zone">
             <NetDiagram value={event.netZone} onChange={(netZone) => save({ netZone })} />
+          </Section>
+        )}
+
+        {isGoal && (
+          <Section label="Shot location">
+            <RinkDiagram value={event.shotOrigin} onChange={(shotOrigin) => save({ shotOrigin })} />
+            <div className="flex min-h-8 items-center justify-between gap-2 text-xs text-muted">
+              <span>{event.shotOrigin ? 'Tap again to move it' : 'Tap roughly where it was shot from'}</span>
+              {event.shotOrigin && (
+                <button
+                  type="button"
+                  onClick={() => save({ shotOrigin: undefined })}
+                  className="h-8 rounded-full border border-line-strong px-3 font-bold text-fg-2"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           </Section>
         )}
 

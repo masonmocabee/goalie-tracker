@@ -1,5 +1,5 @@
 import { comparePeriod } from '../lib/periods';
-import type { Game, GoalReason, NetZone, Period, ShotEvent } from '../types';
+import type { Game, GoalReason, NetZone, Period, ShotEvent, ShotOrigin } from '../types';
 import { highDangerTotals, totals, type ShotTotals } from './gameStats';
 
 export interface GameEvents {
@@ -30,6 +30,8 @@ export interface SeasonStats {
   byPeriod: { period: Period; stats: ShotTotals }[];
   goalsByReason: { reason: GoalReason; count: number }[]; // most common first
   goalsByZone: Partial<Record<NetZone, number>>;
+  /** Where goals were shot from, for those that have a location. */
+  goalOrigins: ShotOrigin[];
   goalsMissingReason: number;
   /** One point per game with shots, oldest first. */
   trend: TrendPoint[];
@@ -85,6 +87,7 @@ export function seasonStats(games: GameEvents[], today: string): SeasonStats {
       .map(([reason, count]) => ({ reason, count }))
       .sort((a, b) => b.count - a.count),
     goalsByZone,
+    goalOrigins: goals.flatMap((g) => (g.shotOrigin ? [g.shotOrigin] : [])),
     goalsMissingReason,
     trend: [...live]
       .filter((g) => g.events.length > 0)
